@@ -1,0 +1,337 @@
+version 13.3R5.9;
+system {
+    host-name ipsen-auber-rt-mx5-0014;
+    domain-name xxx.atos.fr;
+    domain-search [ sub.xxx.atos.fr sub2.xxx.atos.fr ];
+    time-zone Europe/Paris;
+    root-authentication {
+        encrypted-password "$1$fll2lx7A$6OPin6wNCme/jRWjNpVNv1"; ## SECRET-DATA
+    }
+    name-server {
+        10.73.2.253;
+    }
+    tacplus-server {
+        193.56.47.30 {
+            port 49;
+            secret "$9$c69Sv8Xx-wsgoJDHmPF3B1RhSlNdw"; ## SECRET-DATA
+            timeout 5;
+            source-address {{ mgtIp }};
+        }
+        193.56.47.31 {
+            port 49;
+            secret "$9$/778901RESeKWLxdwg4UDQz369tcye"; ## SECRET-DATA
+            timeout 5;
+            source-address {{ mgtIp }};
+        }
+    }
+    login {
+        retry-options {
+            tries-before-disconnect 3;
+            backoff-threshold 3;
+            backoff-factor 5;
+            maximum-time 20;
+        }
+        user admin {
+            uid 2000;
+            class super-user;
+            authentication {
+                encrypted-password "$1$WPfQ9yj8$xkrETLxudLtUYSVHU9Vjo/"; ## SECRET-DATA
+            }
+        }
+        user remote {
+            full-name all-remote-users;
+            uid 300;
+            class super-user;
+        }
+        user sauvegar {
+            uid 400;
+            class super-user;
+            authentication {
+                encrypted-password "$1$ADRD3ByD$IxOcEr8TfHwtiafwLd2BP0"; ## SECRET-DATA
+            }
+        }
+    }
+    services {
+        ssh {
+            root-login deny;
+            no-tcp-forwarding;
+            protocol-version v2;
+            max-sessions-per-connection 10;
+            connection-limit 20;
+            rate-limit 5;
+        }
+    }
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any notice;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+        host 161.89.66.57 {
+            any any;
+            source-address {{ mgtIp }};
+        }
+    }
+    ntp {
+        server 161.89.66.63 prefer;
+        source-address {{ mgtIp }};
+    }
+    no-multicast-echo;
+    no-redirects;
+    internet-options {
+        icmpv4-rate-limit packet-rate 500 bucket-size 3;
+        tcp-drop-synfin-set;
+    }
+    ports {
+        console {
+            log-out-on-disconnect;
+            insecure;
+        }
+    }
+
+}
+chassis {
+    aggregated-devices {
+        ethernet {
+            device-count 3;
+        }
+    }
+    fpc 0 {
+        pic 0 {
+            tunnel-services {
+                bandwidth 1g;
+            }
+        }
+    }
+    network-services all-ethernet;
+}
+interfaces {
+    gr-0/0/10 {
+        description "GRE tunnels";
+        {%- for endpoint in gre %}
+        unit {{ endpoint }} {
+            clear-dont-fragment-bit;
+            description "{{ gre[endpoint]['description'] }}";
+            tunnel {
+                source {{lo1}};
+                destination {{ gre[endpoint]['dstIp'] }};
+                routing-instance {
+                    destination VR-MAN;
+                }
+            }
+            family inet {
+                mtu {{ gre[endpoint]['mtu'] }};
+                address {{ gre[endpoint]['ip'] }};
+            }
+            family mpls {
+                mtu {{ gre[endpoint]['mtu'] }};
+            }
+        }
+        {%- endfor %}
+    }
+    ge-1/0/0 {
+        description "Core Side -- to ipsen-auber-ex4300-001 G1/0/13";
+        gigether-options {
+            802.3ad ae0;
+        }
+    }
+    ge-1/0/1 {
+        description "Customer Side -- to ipsen-auber-ex4300-001 G1/0/15";
+        gigether-options {
+            802.3ad ae1;
+        }
+    }
+    ge-1/0/2 {
+        description "Customer Side -- to ipsen-auber-ex4300-001 G1/0/17";
+        gigether-options {
+            802.3ad ae2;
+        }
+    }
+    ge-1/1/0 {
+        description "Core Side -- to ipsen-auber-ex4300-001 G1/0/14";
+        gigether-options {
+            802.3ad ae0;
+        }
+    }
+    ge-1/1/1 {
+        description "Customer Side -- to ipsen-auber-ex4300-001 G1/0/16";
+        gigether-options {
+            802.3ad ae1;
+        }
+    }
+    ge-1/1/2 {
+        description "Customer Side -- to ipsen-auber-ex4300-001 G1/0/18";
+        gigether-options {
+            802.3ad ae2;
+        }
+    }
+    ae0 {
+        description "Core Side -- to ipsen-auber-ex4300-001 PO01";
+        mtu 1618;
+        aggregated-ether-options {
+            lacp {
+                active;
+                periodic slow;
+            }
+        }
+        unit 0 {
+            description "** Core Side -- vlan 10.100.1.160/29";
+            family inet {
+                mtu 1600;
+                address 10.100.1.161/29;
+            }
+        }
+    }
+    ae1 {
+        description "Customer Side -- to ipsen-auber-ex4300-001 PO2";
+        vlan-tagging;
+        encapsulation flexible-ethernet-services;
+        aggregated-ether-options {
+            lacp {
+                active;
+                periodic slow;
+            }
+        }
+        unit 0 {
+            description "** VPLS Customer Side -- VRF PROD target:65000:1";
+            encapsulation vlan-vpls;
+            vlan-id-list [ 2 12 ];
+            family vpls;
+        }
+    }
+    ae2 {
+        description "Customer Side -- to ipsen-auber-ex4300-001 PO3";
+        vlan-tagging;
+        encapsulation flexible-ethernet-services;
+        aggregated-ether-options {
+            lacp {
+                active;
+                periodic slow;
+            }
+        }
+        unit 0 {
+            encapsulation vlan-vpls;
+            vlan-id-list [ 440 442 ];
+            family vpls;
+        }
+    }
+    em0 {
+        unit 0 {
+            family inet;
+        }
+    }
+    fxp0 {
+        description "Management interface";
+        unit 0 {
+            description "** Management IP -- Lab Network";
+        }
+    }
+    lo0 {
+        description Loopback;
+        unit 0 {
+            description "** Router ID";
+            family inet {
+                address {{lo0}};
+            }
+            family mpls;
+        }
+        unit 1 {
+            description "** Loopbak MAN IPSEN";
+            family inet {
+                address {{lo1}};
+            }
+        }
+    }
+}
+protocols {
+    mpls {
+        interface all {
+            disable;
+        }
+        interface lo0.0;
+        {%- for id in gre %}
+        interface gr-0/0/10.{{id}};
+        {%- endfor %}
+    }
+    bgp {
+        group VPLS-IPSEN {
+            type internal;
+            description "BGP Group for IPSEN VPN";
+            local-address {{lo0}};
+            family l2vpn {
+                signaling;
+            }
+            peer-as {{asn}};
+            local-as {{asn}};
+        {%- for neighbor in bgp %}
+            neighbor {{ bgp[neighbor] }};
+        {%- endfor %}
+        }
+    }
+    ospf {
+        traceoptions {
+            file ospf.log;
+            flag error;
+        }
+        area 0.0.0.0 {
+            interface lo0.0 {
+                passive;
+            }
+            {%- for id in gre %}
+            interface gr-0/0/10.{{id}};
+            {%- endfor %}
+        }
+    }
+    ldp {
+        {%- for id in gre %}
+        interface gr-0/0/10.{{id}};
+        {%- endfor %}
+        interface all {
+            disable;
+        }
+        interface lo0.0;
+    }
+}
+routing-instances {
+    {%- for vpls in vplsInstance %}
+    {{ vplsInstance[vpls]['name'] }} {
+        description "{{ vplsInstance[vpls]['description'] }}";
+        instance-type vpls;
+        interface {{ vplsInstance[vpls]['interface'] }};
+        route-distinguisher {{lo1}}:{{ vplsInstance[vpls]['id'] }};
+        vrf-target target:{{asn}}:{{ vplsInstance[vpls]['id'] }};
+        protocols {
+            vpls {
+                no-tunnel-services;
+                site {{ vpls[siteName] }} {
+                    site-identifier {{ vplsInstance[vpls]['siteId'] }};
+                    multi-homing;
+                    site-preference {{ vplsInstance[vpls]['sitePreference'] }};
+                }
+                mac-flush;
+            }
+        }
+    }
+    {%- endfor %}
+
+    VR-MAN {
+        instance-type virtual-router;
+        interface ae0.0;
+        interface lo0.1;
+        protocols {
+            ospf {
+                area 0.0.0.0 {
+                    interface ae0.0;
+                    interface lo0.1 {
+                        passive;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,237 @@
+---
+# Unique ID to identify one Router
+- mxRef: 14
+  # Loopback exposed to ATOS Side
+  lo0: 10.200.2.1
+  # Loopback exposed to Customer Side
+  lo1: 10.100.2.1
+  # Local ASN used to build VPLS signalisation
+  asn: 6500
+  # Management IP and Subnet
+  mgtIp: 172.16.1.1
+  mgtNetmask: 24
+  # MP-BGP Neighbor
+  bgp:
+      neighbor1: 10.200.2.2
+      neighbor2: 10.200.2.3
+      neighbor3: 10.200.2.4
+  # GRE Definition
+  gre:
+      15:
+          description: "** GRE vers MX5-0015"
+          dstIp: 10.100.2.2
+          mtu: 1500
+          ip: 192.168.10.1/29
+      16:
+          description: "** GRE vers MX5-0016"
+          dstIp: 10.100.2.3
+          mtu: 1500
+          ip: 192.168.0.1/29
+  # VPLS Definition
+  vplsInstance:
+      prod:
+          description: "VPLS IPSEN -- Instance Prod -- target:65000:1"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-PROD
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 2
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 2 
+          # Site preference in case of multihoming
+          sitePreference: 1000
+          # Customer Interface:
+          interface: ae1.0
+      dmz:
+          description: "VPLS IPSEN -- Instance DMZ -- target:65000:2"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-DMZ
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 1
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 2 
+          # Site preference in case of multihoming
+          sitePreference: 20000
+          # Customer Interface:
+          interface: ae2.0
+## ------------------------------------------ ##
+# Unique ID to identify one Router
+- mxRef: 15
+  # Loopback exposed to ATOS Side
+  lo0: 10.200.2.2
+  # Loopback exposed to Customer Side
+  lo1: 10.100.2.2
+  # Local ASN used to build VPLS signalisation
+  asn: 6500
+  # Management IP and Subnet
+  mgtIp: 172.16.1.1
+  mgtNetmask: 24
+  # MP-BGP Neighbor
+  bgp:
+      neighbor1: 10.200.2.1
+      neighbor2: 10.200.2.3
+      neighbor3: 10.200.2.4
+  # GRE Definition
+  gre:
+      14:
+          description: "** GRE vers MX5-0015"
+          dstIp: 10.100.2.1
+          mtu: 1500
+          ip: 192.168.10.2/29
+      17:
+          description: "** GRE vers MX5-0016"
+          dstIp: 10.100.2.4
+          mtu: 1500
+          ip: 192.168.1.1/29
+  # VPLS Definition
+  vplsInstance:
+      prod:
+          description: "VPLS IPSEN -- Instance Prod -- target:65000:1"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-PROD
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 2
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 2 
+          # Site preference in case of multihoming
+          sitePreference: 20000
+          # Customer Interface:
+          interface: ae1.0
+      dmz:
+          description: "VPLS IPSEN -- Instance DMZ -- target:65000:2"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-DMZ
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 1
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 2 
+          # Site preference in case of multihoming
+          sitePreference: 1000
+          # Customer Interface:
+          interface: ae2.0
+## ------------------------------------------ ##
+# Unique ID to identify one Router
+- mxRef: 16
+  # Loopback exposed to ATOS Side
+  lo0: 10.200.2.3
+  # Loopback exposed to Customer Side
+  lo1: 10.100.2.3
+  # Local ASN used to build VPLS signalisation
+  asn: 6500
+  # Management IP and Subnet
+  mgtIp: 172.16.1.1
+  mgtNetmask: 24
+  # MP-BGP Neighbor
+  bgp:
+      neighbor1: 10.200.2.1
+      neighbor2: 10.200.2.2
+      neighbor3: 10.200.2.4
+  # GRE Definition
+  gre:
+      14:
+          description: "** GRE vers MX5-0015"
+          dstIp: 10.100.2.1
+          mtu: 1500
+          ip: 192.168.0.2/29
+      17:
+          description: "** GRE vers MX5-0016"
+          dstIp: 10.100.2.4
+          mtu: 1500
+          ip: 192.168.11.1/29
+  # VPLS Definition
+  vplsInstance:
+      prod:
+          description: "VPLS IPSEN -- Instance Prod -- target:65000:1"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-PROD
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 2
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 20 
+          # Site preference in case of multihoming
+          sitePreference: 1000
+          # Customer Interface:
+          interface: ae1.0
+      dmz:
+          description: "VPLS IPSEN -- Instance DMZ -- target:65000:2"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-DMZ
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 1
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 20 
+          # Site preference in case of multihoming
+          sitePreference: 20000
+          # Customer Interface:
+          interface: ae2.0
+## ------------------------------------------ ##
+# Unique ID to identify one Router
+- mxRef: 17
+  # Loopback exposed to ATOS Side
+  lo0: 10.200.2.4
+  # Loopback exposed to Customer Side
+  lo1: 10.100.2.4
+  # Local ASN used to build VPLS signalisation
+  asn: 6500
+  # Management IP and Subnet
+  mgtIp: 172.16.1.1
+  mgtNetmask: 24
+  # MP-BGP Neighbor
+  bgp:
+      neighbor1: 10.200.2.1
+      neighbor2: 10.200.2.2
+      neighbor3: 10.200.2.3
+  # GRE Definition
+  gre:
+      15:
+          description: "** GRE vers MX5-0015"
+          dstIp: 10.100.2.2
+          mtu: 1500
+          ip: 192.168.1.2/29
+      17:
+          description: "** GRE vers MX5-0017"
+          dstIp: 10.100.2.3
+          mtu: 1500
+          ip: 192.168.11.2/29
+  # VPLS Definition
+  vplsInstance:
+      prod:
+          description: "VPLS IPSEN -- Instance Prod -- target:65000:1"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-PROD
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 2
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 20 
+          # Site preference in case of multihoming
+          sitePreference: 20000
+          # Customer Interface:
+          interface: ae1.0
+      dmz:
+          description: "VPLS IPSEN -- Instance DMZ -- target:65000:2"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-DMZ
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 1
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 20 
+          # Site preference in case of multihoming
+          sitePreference: 1000
+          # Customer Interface:
+          interface: ae2.0
+## ------------------------------------------ ##
