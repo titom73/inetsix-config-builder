@@ -14,6 +14,7 @@ parser.add_argument('-v','--verbose' ,help='Increase Verbosity',action="store_tr
 parser.add_argument('-y', '--yaml', help='Provides YAML file to fill Jinja2 template, default=dict.yml',default='dict.yml')
 parser.add_argument('-t','--template' ,help='template file, default=./template.j2',default='./template.j2')
 parser.add_argument('-o','--output' ,help='Base to construct filename, default=generated-conf-',default='generated-conf-')
+#parser.add_argument('-dir','--directory' ,help='Directory to save configurations',default='./ouput')
 # Manage All options and construct array
 options = parser.parse_args()
 
