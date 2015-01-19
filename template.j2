@@ -1,25 +1,22 @@
-version 13.3R5.9;
 system {
-    host-name ipsen-auber-rt-mx5-0014;
-    domain-name xxx.atos.fr;
-    domain-search [ sub.xxx.atos.fr sub2.xxx.atos.fr ];
+    host-name rtr01;
+    domain-name xxx.inetsix.fr;
+    domain-search [ sub.xxx.inetsix.fr sub2.xxx.inetsix.fr ];
     time-zone Europe/Paris;
     root-authentication {
-        encrypted-password "$1$fll2lx7A$6OPin6wNCme/jRWjNpVNv1"; ## SECRET-DATA
+        encrypted-password "$1$fdnpufsf[g]Cme/jRWjNpVNv1"; ## SECRET-DATA
     }
     name-server {
         10.73.2.253;
     }
     tacplus-server {
-        193.56.47.30 {
+        10.73.2.30 {
             port 49;
-            secret "$9$c69Sv8Xx-wsgoJDHmPF3B1RhSlNdw"; ## SECRET-DATA
             timeout 5;
             source-address {{ mgtIp }};
         }
-        193.56.47.31 {
+        10.73.2.31 {
             port 49;
-            secret "$9$/778901RESeKWLxdwg4UDQz369tcye"; ## SECRET-DATA
             timeout 5;
             source-address {{ mgtIp }};
         }
@@ -30,25 +27,6 @@ system {
             backoff-threshold 3;
             backoff-factor 5;
             maximum-time 20;
-        }
-        user admin {
-            uid 2000;
-            class super-user;
-            authentication {
-                encrypted-password "$1$WPfQ9yj8$xkrETLxudLtUYSVHU9Vjo/"; ## SECRET-DATA
-            }
-        }
-        user remote {
-            full-name all-remote-users;
-            uid 300;
-            class super-user;
-        }
-        user sauvegar {
-            uid 400;
-            class super-user;
-            authentication {
-                encrypted-password "$1$ADRD3ByD$IxOcEr8TfHwtiafwLd2BP0"; ## SECRET-DATA
-            }
         }
     }
     services {
@@ -72,7 +50,7 @@ system {
         file interactive-commands {
             interactive-commands any;
         }
-        host 161.89.66.57 {
+        host 1.1.1.1 {
             any any;
             source-address {{ mgtIp }};
         }
@@ -135,43 +113,36 @@ interfaces {
         {%- endfor %}
     }
     ge-1/0/0 {
-        description "Core Side -- to ipsen-auber-ex4300-001 G1/0/13";
         gigether-options {
             802.3ad ae0;
         }
     }
     ge-1/0/1 {
-        description "Customer Side -- to ipsen-auber-ex4300-001 G1/0/15";
         gigether-options {
             802.3ad ae1;
         }
     }
     ge-1/0/2 {
-        description "Customer Side -- to ipsen-auber-ex4300-001 G1/0/17";
         gigether-options {
             802.3ad ae2;
         }
     }
     ge-1/1/0 {
-        description "Core Side -- to ipsen-auber-ex4300-001 G1/0/14";
         gigether-options {
             802.3ad ae0;
         }
     }
     ge-1/1/1 {
-        description "Customer Side -- to ipsen-auber-ex4300-001 G1/0/16";
         gigether-options {
             802.3ad ae1;
         }
     }
     ge-1/1/2 {
-        description "Customer Side -- to ipsen-auber-ex4300-001 G1/0/18";
         gigether-options {
             802.3ad ae2;
         }
     }
     ae0 {
-        description "Core Side -- to ipsen-auber-ex4300-001 PO01";
         mtu 1618;
         aggregated-ether-options {
             lacp {
@@ -180,15 +151,13 @@ interfaces {
             }
         }
         unit 0 {
-            description "** Core Side -- vlan 10.100.1.160/29";
             family inet {
                 mtu 1600;
-                address 10.100.1.161/29;
+                address 10.73.1.161/29;
             }
         }
     }
     ae1 {
-        description "Customer Side -- to ipsen-auber-ex4300-001 PO2";
         vlan-tagging;
         encapsulation flexible-ethernet-services;
         aggregated-ether-options {
@@ -200,12 +169,11 @@ interfaces {
         unit 0 {
             description "** VPLS Customer Side -- VRF PROD target:65000:1";
             encapsulation vlan-vpls;
-            vlan-id-list [ 2 12 ];
+            vlan-id-list [ 2 20 ];
             family vpls;
         }
     }
     ae2 {
-        description "Customer Side -- to ipsen-auber-ex4300-001 PO3";
         vlan-tagging;
         encapsulation flexible-ethernet-services;
         aggregated-ether-options {
@@ -216,7 +184,7 @@ interfaces {
         }
         unit 0 {
             encapsulation vlan-vpls;
-            vlan-id-list [ 440 442 ];
+            vlan-id-list [ 4 40 ];
             family vpls;
         }
     }
@@ -241,7 +209,7 @@ interfaces {
             family mpls;
         }
         unit 1 {
-            description "** Loopbak MAN IPSEN";
+            description "** Loopbak MAN INETSIX";
             family inet {
                 address {{lo1}};
             }
@@ -259,9 +227,9 @@ protocols {
         {%- endfor %}
     }
     bgp {
-        group VPLS-IPSEN {
+        group VPLS-INETSIX {
             type internal;
-            description "BGP Group for IPSEN VPN";
+            description "BGP Group for INETSIX VPN";
             local-address {{lo0}};
             family l2vpn {
                 signaling;
@@ -274,10 +242,6 @@ protocols {
         }
     }
     ospf {
-        traceoptions {
-            file ospf.log;
-            flag error;
-        }
         area 0.0.0.0 {
             interface lo0.0 {
                 passive;
