@@ -15,15 +15,15 @@ In order to run this script you must install following modules:
 
 - argparse / optparse
 
-	pip install argparse
+	```pip install argparse```
 
 - Jinja2
 
-    pip install jinja2
+    ```pip install jinja2```
 
 - Yaml:
 
-    pip install yaml
+    ```pip install yaml```
 
 ### Usage
 Usage is like below:
