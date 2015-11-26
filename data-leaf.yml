@@ -82,14 +82,8 @@
       target: target:3:104
       community_name: commTenant1_vni4
       vlan: 104
-  # Interface to connect customer.
   CUSTOMER_IFS:
     xe-0/0/46:
-    # interface: customer oriented interface
-    #   description: interface description
-    #   mode access|trunk - configure 802.1q
-    #   vlanid: list all vlans accepted on this interface
-    #   esi: ESI value if interface is part of a dual homed setup
       description: "vmware host vmnic6"
       mode: access
       vlanid:
