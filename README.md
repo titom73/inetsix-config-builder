@@ -7,7 +7,9 @@ Provide python script to massively generate configuration based on :
 
 ## Description
 
-Simple Script created to count how many times objects are used in a SRX configuration. Goal is to identifiy which object can be deleted to clean up configuration.
+Simple Script created to generate text document for many entries by using a template and YAML data modeling. It can be used for any kind of text file and it is not related to a specific vendor / language.
+
+For the moment, one of the use case is to generate configuration for many devices based on a `JINJA2` template.
 
 ## Requirements
 
