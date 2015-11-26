@@ -1,0 +1,33 @@
+{%- for PE_INTERFACE in PE_INTERFACES %}
+Interface {{PE_INTERFACE}} connected to {{PE_INTERFACES[PE_INTERFACE]['remote_pe']}}:
+/*******************************************************************************/
+interfaces { 
+    {{ PE_INTERFACE }} { 
+        {% if PE_INTERFACES[PE_INTERFACE]['member_of'] %}description "cmz:avdcnlec15:GigabitEthernet0/0/3";
+        gigether-options {
+            802.3ad {{PE_INTERFACES[PE_INTERFACE]['member_of'] }};
+        } {% else %}
+        unit 0 {
+            description "cmz:{{PE_INTERFACES[PE_INTERFACE]['descr']}}";
+            family inet {
+                address {{PE_INTERFACES[PE_INTERFACE]['ip']}}/30;
+            }
+            family mpls;
+            family iso;
+        }{% endif %}
+        mtu 9126;  
+    }
+}
+protocols {
+    isis {
+        interface {{PE_INTERFACE}} { 
+            bfd-liveness-detection {
+                version automatic;
+                minimum-interval 300;
+                multiplier 3;
+            } 
+        }
+    }
+}
+/*******************************************************************************/
+{%- endfor %}

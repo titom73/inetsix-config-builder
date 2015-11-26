@@ -1,0 +1,470 @@
+version 13.3R5.9;
+chassis {
+    aggregated-devices {
+        ethernet {
+            device-count 3;
+        }
+    }
+    fpc 0 {
+        pic 0 {
+            tunnel-services {
+                bandwidth 1g;
+            }
+        }
+    }
+    network-services all-ethernet;
+}
+interfaces {
+    gr-0/0/10 {
+        description "GRE tunnels";
+        {%- for endpoint in gre %}
+        unit {{ endpoint }} {
+            clear-dont-fragment-bit;
+            description "{{ gre[endpoint]['description'] }}";
+            tunnel {
+                source {{lo1}};
+                destination {{ gre[endpoint]['dstIp'] }};
+                routing-instance {
+                    destination VR-MAN;
+                }
+            }
+            family inet {
+                mtu {{ gre[endpoint]['mtuInet'] }};
+                address {{ gre[endpoint]['ip'] }};
+            }
+            family mpls {
+                mtu {{ gre[endpoint]['mtuMpls'] }};
+            }
+        }
+        {%- endfor %}
+    }
+    ge-1/0/0 {
+        description "MUST BE COMPLETED";
+        gigether-options {
+            802.3ad ae0;
+        }
+    }
+    ge-1/0/1 {
+        description "MUST BE COMPLETED";
+        gigether-options {
+            802.3ad ae1;
+        }
+    }
+    ge-1/0/2 {
+        description "MUST BE COMPLETED";
+        gigether-options {
+            802.3ad ae2;
+        }
+    }
+    ge-1/1/0 {
+        description "MUST BE COMPLETED";
+        gigether-options {
+            802.3ad ae0;
+        }
+    }
+    ge-1/1/1 {
+        description "MUST BE COMPLETED";
+        gigether-options {
+            802.3ad ae1;
+        }
+    }
+    ge-1/1/2 {
+        description "MUST BE COMPLETED";
+        gigether-options {
+            802.3ad ae2;
+        }
+    }
+    ae0 {
+        description "MUST BE COMPLETED";
+        mtu 1618;
+        aggregated-ether-options {
+            lacp {
+                active;
+                periodic slow;
+            }
+        }
+        unit 0 {
+            description "MUST BE COMPLETED";
+            family inet {
+                mtu 1600;
+                address {{coreIP}};
+            }
+        }
+    }
+    ae1 {
+        description "MUST BE COMPLETED";
+        vlan-tagging;
+        encapsulation flexible-ethernet-services;
+        aggregated-ether-options {
+            lacp {
+                active;
+                periodic slow;
+            }
+        }
+        unit 0 {
+            description "** VPLS Customer Side -- VRF PROD target:65000:1";
+            encapsulation vlan-vpls;
+            vlan-id-list [ 2 12 ];
+            family vpls;
+        }
+    }
+    ae2 {
+        description "MUST BE COMPLETED";
+        vlan-tagging;
+        encapsulation flexible-ethernet-services;
+        aggregated-ether-options {
+            lacp {
+                active;
+                periodic slow;
+            }
+        }
+        unit 0 {
+            encapsulation vlan-vpls;
+            vlan-id-list [ 440 442 ];
+            family vpls;
+        }
+    }
+    {{backToBackIf}} {
+        description "Back to Back";
+        unit 0 {
+            description "** Back To Back";
+            family inet {
+                address {{ backToBackIp }};
+            }
+            family mpls;
+        }
+    }
+    lo0 {
+        description Loopback;
+        unit 0 {
+            description "** Router ID";
+            family inet {
+                address {{lo0}};
+            }
+            family mpls;
+        }
+        unit 1 {
+            description "** Loopbak MAN IPSEN";
+            family inet {
+                address {{lo1}};
+            }
+        }
+    }
+}
+protocols {
+    mpls {
+        interface all {
+            disable;
+        }
+        interface lo0.0;
+        {%- for id in gre %}
+        interface gr-0/0/10.{{id}};
+        {%- endfor %}
+        interface {{backToBackIf}};
+    }
+    bgp {
+        group VPLS-IPSEN {
+            type internal;
+            description "BGP Group for IPSEN VPN";
+            local-address {{lo0}};
+            family l2vpn {
+                signaling;
+            }
+            peer-as {{asn}};
+            local-as {{asn}};
+        {%- for neighbor in bgp %}
+            neighbor {{ bgp[neighbor] }};
+        {%- endfor %}
+        }
+    }
+    ospf {
+        traceoptions {
+            file ospf.log;
+            flag error;
+        }
+        area 0.0.0.0 {
+            interface lo0.0 {
+                passive;
+            }
+            {%- for id in gre %}
+            interface gr-0/0/10.{{id}};
+            {%- endfor %}
+            interface {{backToBackIf}};
+        }
+    }
+    ldp {
+        {%- for id in gre %}
+        interface gr-0/0/10.{{id}};
+        {%- endfor %}
+        interface all {
+            disable;
+        }
+        interface lo0.0;
+        interface {{backToBackIf}};
+    }
+}
+routing-instances {
+    {%- for vpls in vplsInstance %}
+    {{ vplsInstance[vpls]['name'] }} {
+        description "{{ vplsInstance[vpls]['description'] }}";
+        instance-type vpls;
+        interface {{ vplsInstance[vpls]['interface'] }};
+        route-distinguisher {{lo1}}:{{ vplsInstance[vpls]['id'] }};
+        vrf-target target:{{asn}}:{{ vplsInstance[vpls]['id'] }};
+        forwarding-options {
+            family vpls {
+                flood {
+                    input VPLS-FLOOD-FILTER;
+                }
+            }
+        }
+        protocols {
+            vpls {
+                no-tunnel-services;
+                site {{ vplsInstance[vpls]['siteName'] }} {
+                    site-identifier {{ vplsInstance[vpls]['siteId'] }};
+                    multi-homing;
+                    site-preference {{ vplsInstance[vpls]['sitePreference'] }};
+                }
+                mac-flush;
+                mac-table-size {
+                    10240;
+                    packet-action drop;
+                }
+                interface-mac-limit {
+                    2560;
+                    packet-action drop;
+                }
+            }
+        }
+    }
+    {%- endfor %}
+
+    VR-MAN {
+        instance-type virtual-router;
+        interface ae0.0;
+        interface lo0.1;
+        protocols {
+            ospf {
+                reference-bandwidth 10g;
+                area 0.0.0.0 {
+                    interface ae0.0;
+                    interface lo0.1 {
+                        passive;
+                    }
+                }
+            }
+        }
+    }
+}
+policy-options {
+    prefix-list OSPF-MCST-IP {
+        224.0.0.5/32;
+        224.0.0.6/32;
+    }
+    prefix-list BGP-NEIGHBORS {
+        apply-path "routing-instances <*> protocols bgp group <*> neighbor <*>";
+        apply-path "protocols bgp group <*> neighbor <*>";
+    }
+    prefix-list ADMIN_LANS {
+        {%- for lan in ADMIN_Lan %}
+            {{ ADMIN_Lan[lan] }};
+        {%- endfor %}
+    }
+    prefix-list NTP-SERVERS {
+        apply-path "system ntp server <*>";
+    }
+    prefix-list SNMP {
+        apply-path "snmp community <*> clients <*>";
+        apply-path "snmp trap-group <*> targets <*>";
+    }
+    prefix-list TACACS-SERVERS {
+        apply-path "system tacplus-server <*>";
+    }
+    prefix-list LOCALHOST {
+        127.0.0.0/8;
+    }
+    prefix-list LOOPBACK {
+        apply-path "interfaces lo0 unit <*> family inet address <*>";
+    }
+    prefix-list DNS_SERVER {
+        apply-path "system name-server <*>";
+    }
+    prefix-list OSPF-LOCALS {
+        apply-path "interfaces ae0 unit <*> family inet address <*>";
+    }
+}
+firewall {
+    family vpls {
+        filter VPLS-FLOOD-FILTER {
+            term STP-BPDU-FILTER {
+                from {
+                    destination-mac-address {
+                        01:80:c2:00:00:00/48;
+                    }
+                }
+                then {
+                    count FILTERED-STP-BPDU;
+                    discard;
+                }
+            }
+            term PVST-BPDU-FILTER {
+                from {
+                    destination-mac-address {
+                        01:00:0c:cc:cc:cd/48;
+                    }
+                }
+                then {
+                    count FILTERED-PVST-BPDU;
+                    discard;
+                }
+            }
+            term UPFAST-BPDU-FILTER {
+                from {
+                    destination-mac-address {
+                        01:00:0c:cd:cd:cd/48;
+                    }
+                }
+                then {
+                    count FILTERED-UPFAST-BPDU;
+                    discard;
+                }
+            }
+            term BROADCAST-LIMIT {
+                from {
+                    traffic-type broadcast;
+                }
+                then {
+                    policer POLICER-LIMIT-{{ vplsShaper }}BPS;
+                    count TOTAL-BROADCAST;
+                    next term;
+                }
+            }
+            term MULTICAST-COUNT {
+                from {
+                    traffic-type multicast;
+                }
+                then {
+                    count TOTAL-MULTICAST;
+                    next term;
+                }
+            }
+            term UNKNOWN-UNICAST-COUNT {
+                from {
+                    traffic-type unknown-unicast;
+                }
+                then {
+                    count TOTAL-UNKNOWN-UNICAST;
+                    next term;
+                }
+            }
+            term LAST-RULE-PERMIT-ANY {
+                then accept;
+            }
+        }
+    }
+    family inet {
+        filter PROTECT-ROUTING-ENGINE {
+            term ADMIN {
+                from {
+                    prefix-list {
+                        ADMIN_LANS;
+                    }
+                    destination-port ssh;
+                }
+                then accept;
+            }
+            term BGP {
+                from {
+                    prefix-list {
+                        BGP-NEIGHBORS;
+                    }
+                    protocol tcp;
+                    port bgp;
+                }
+                then accept;
+            }
+            term TACACS {
+                from {
+                    prefix-list {
+                        TACACS-SERVERS;
+                    }
+                    port tacacs;
+                }
+                then accept;
+            }
+            term OSPF {
+                from {
+                    prefix-list {
+                        OSPF-MCST-IP;
+                        OSPF-LOCALS;
+                    }
+                    protocol ospf;
+                }
+                then accept;
+            }                           
+            term ICMP {
+                from {
+                    protocol icmp;
+                    icmp-type [ echo-request echo-reply unreachable time-exceeded ];
+                }
+                then {
+                    policer 1m-bw-limit;
+                    accept;
+                }
+            }
+            term NTP {
+                from {
+                    prefix-list {
+                        LOCALHOST;
+                        NTP-SERVERS;
+                        LOOPBACK;
+                    }
+                    protocol udp;
+                    port ntp;
+                }
+                then accept;
+            }
+            term SNMP {
+                from {
+                    prefix-list {
+                        SNMP;
+                    }
+                    protocol udp;
+                    port snmp;
+                }
+                then accept;
+            }
+            term DNS {
+                from {
+                    prefix-list {
+                        DNS_SERVER;
+                    }
+                    protocol udp;
+                    port domain;
+                }
+                then accept;
+            }
+            term EVERYTHING-ELSE {
+                then {                  
+                    log;
+                    discard;
+                }
+            }
+        }
+    }
+    policer 1m-bw-limit {
+        if-exceeding {
+            bandwidth-limit 1m;
+            burst-size-limit 15k;
+        }
+        then discard;
+    }
+    policer POLICER-LIMIT-{{ vplsShaper }}BPS {
+        if-exceeding {
+            bandwidth-limit {{ vplsShaper }};
+            burst-size-limit 1500;
+        }
+        then discard;
+    }
+}

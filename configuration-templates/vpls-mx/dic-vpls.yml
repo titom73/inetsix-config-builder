@@ -1,0 +1,63 @@
+---
+# Unique ID to identify one Router
+- mxRef: 14
+  # Loopback exposed to Core Side
+  lo0: 10.100.2.11
+  # Loopback exposed to Customer Side
+  lo1: 10.100.2.1
+  # Local ASN used to build VPLS signalisation
+  asn: 65000
+  #Core IP Address
+  coreIP: 10.100.1.161/29
+  # Shaper Value to rate limit BUM on VPLS FTF
+  vplsShaper: 40m
+  # back to Back information
+  backToBackIp: 192.168.10.1/29
+  backToBackIf: ge-1/0/4
+  # Admin LAN for Management
+  # TODO: Must deploy on all devices configured in this file.
+  ADMIN_Lan:
+      lan1: 0.0.0.0/0
+  # MP-BGP Neighbor
+  bgp:
+      neighbor1: 10.200.2.2
+      neighbor2: 10.200.2.3
+      neighbor3: 10.200.2.4
+  # GRE Definition
+  gre:
+      16:
+          description: "** GRE vers MX5-0016"
+          dstIp: 10.100.2.3
+          mtuMpls: 1530
+          mtuInet: 1522
+          ip: 192.168.0.1/29
+  # VPLS Definition
+  vplsInstance:
+      VPLS-PROD:
+          description: "VPLS IPSEN -- Instance Prod -- target:650000:1"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-PROD
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 2
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 93 
+          # Site preference in case of multihoming
+          sitePreference: 1000
+          # Customer Interface:
+          interface: ae1.0
+      VPLS-DMZ:
+          description: "VPLS IPSEN -- Instance DMZ -- target:650000:2"
+          # VRF Name: VPLS-PROD or VPLS-DMZ for ipsen perimeter
+          name: VPLS-DMZ
+          # VRF ID used to build RD ( {{lo1}}:{{id}} ) and RT ( target:{{asn}}:{{id}} )
+          id: 1
+          # site name to identify VPLS site
+          siteName: DC-VPLS
+          # vpls sie id value
+          siteId: 93 
+          # Site preference in case of multihoming
+          sitePreference: 20000
+          # Customer Interface:
+          interface: ae2.0
