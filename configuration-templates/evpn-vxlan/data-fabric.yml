@@ -1,0 +1,114 @@
+---
+- hostname: FABRIC01
+  # Management IP for both Routing engine
+  fxp0_re0:
+  fxp0_re1:
+  # Loopback address configured on the device
+  loopback: 10.30.0.1
+  # Default gateway (For remote access)
+  default_gateway:
+  # Time server
+  ntp_server:
+  # ASN use for configuring eBGP session for IP Fabric
+  asn_underlay:
+  # ASN configured in the EVPN control plane
+  asn_overlay:
+  # Supernet used for all network in the underlay
+  ip_fabric_supernet:
+  # Supernet where all loopback address are configured
+  loopback_supernet:
+  # Target to announce ESI
+  target_esi: target:1:99
+  # Downlink configuration between Fabric and Spines
+  DOWNLINKS :
+  # interface:
+  #   description of the interface
+  #   mtu: should be the same on all links
+  #   IP address configure on the interface
+    xe-2/0/0 :
+      description: "DOWNLINK to spine01"
+      mtu: 9000
+      ip: "192.168.0.12/31"
+    xe-2/0/1 :
+      description: "DOWNLINK to spine02"
+      mtu: 9000
+      ip: "192.168.0.14/31"
+  # L3 routing interfaces. Will be used to enable VXLAN routing
+  VLANS:
+  # vlan ID:
+  #   description
+  #   ip address
+  #   Virtual Gateway shared across all Fabric switches
+    101:
+      description: "L3 interface for BD/VLAN 104"
+      address: 172.16.101.11/24
+      gateway: 172.16.101.1
+    102:
+      description: "L3 interface for BD/VLAN 104"
+      address: 172.16.102.11/24
+      gateway: 172.16.102.1
+    103:
+      description: "L3 interface for BD/VLAN 104"
+      address: 172.16.103.11/24
+      gateway: 172.16.103.1
+    104:
+      description: "L3 interface for BD/VLAN 104"
+      address: 172.16.104.11/24
+      gateway: 172.16.104.1
+  # BGP configuration for the underlay
+  # List all peers
+  BGP_UNDERLAY_PEERS:
+  # PEER IP Address:
+  #    asn: asn configured on remote device
+  #    description: description to see who is the remote peer
+    192.168.0.13:
+      asn: 101
+      description: SPINE01
+    192.168.0.15:
+      asn: 102
+      description: SPINE02
+  # BGP configuration for the underlay
+  # List all peers
+  BGP_OVERLAY_PEERS:
+  # PEER IP Address:
+  #    description to see who is the remote peer
+    10.20.1.1:
+      description: LEAF01
+    10.20.1.2:
+      description: LEAF02
+    10.20.1.3:
+      description: LEAF03
+    10.20.1.4:
+      description: LEAF04
+    10.30.1.2:
+      description: FABRIC02
+  # Describe all tenants
+  TENANTS:
+    # First tenant
+    tenant01:
+      community_name: commTenant1
+      target_evpn: target:2:101
+      target_vrf: target:1:100
+      # Route Distinguisher ID added to the loopback
+      rdID: 100
+      VNIS:
+        #VNI ID
+        #  target: target to announce MAC in this VNI
+        #  community_name: Name to configure policy
+        #  irb: IRB configure to activate VXLAN routing
+        101:
+          target: target:3:101
+          community_name: commTenant1_vni1
+          irb: 101
+        102:
+          target: target:3:102
+          community_name: commTenant1_vni2
+          irb: 102
+        103:
+          target: target:3:103
+          community_name: commTenant1_vni3
+          irb: 103
+        104:
+          target: target:3:104
+          community_name: commTenant1_vni4
+          irb: 104
