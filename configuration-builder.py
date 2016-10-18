@@ -16,9 +16,14 @@ parser.add_argument('-y', '--yaml', help='Provides YAML file to fill Jinja2 temp
 parser.add_argument('-t','--template' ,help='template file, default=./template.j2',default='./template.j2')
 parser.add_argument('-b','--base' ,help='Base to construct filename, default=generated-conf-',default='generated-conf-')
 parser.add_argument('-k','--key' ,help='Key used in YAML file, default=hostname',default='hostname')
+parser.add_argument('-o','--output', help='Directory to store configuration', default="configuration_output/")
+parser.add_argument('-of','--output_format', help='File extension', default="conf")
 # Manage All options and construct array
 options = parser.parse_args()
 
+# Check if output directory is existing, else create it.
+if os.path.exists(options.output) is False:
+        os.makedirs(options.output)
 
 print 'Start configuration building'
 # YAML file.
@@ -33,12 +38,12 @@ with open( options.template ) as t_fh:
 
 for device in data:
 	hostname = device[ options.key ]
-	print '  - Generate config for '+options.key
+	print '  - Generate config for '+ hostname
 	print ''
 	#pprint( device )
 	template = Template( t_format )
 
-	confFile = open( options.base + str(hostname) + '.conf','w')
+	confFile = open( options.output+"/"+options.base + str(hostname) + '.' + options.output_format,'w')
 	confFile.write( template.render( device ) )
 	confFile.close()
 
