@@ -11,21 +11,13 @@ Simple Script created to generate text document for many entries by using a temp
 
 For the moment, one of the use case is to generate configuration for many devices based on a `JINJA2` template.
 
-## Requirements
+## Installation
 
-In order to run this script you must install following modules:
+Scripts can be installed with pip:
 
-- argparse / optparse
-
-	```pip install argparse```
-
-- Jinja2
-
-    ```pip install jinja2```
-
-- Yaml:
-
-    ```pip install yaml```
+```shell
+$ pip install git+https://github.com/titom73/inetsix-config-builder
+```
 
 ### Usage
 Usage is like below:

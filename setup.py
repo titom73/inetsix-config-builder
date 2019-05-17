@@ -10,12 +10,12 @@ with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()
 
 # Rename Scripts to sync with original name
-shutil.copyfile('bin/jinja-render.py', 'bin/jinja-render')
+shutil.copyfile('bin/jinja-render.py', 'bin/inetsix-jinja-render')
 
 setup(
-    name="cvp-tools-scripts",
+    name="inetsix-template-render",
     version='0.2',
-    scripts=["bin/jinja-render"],
+    scripts=["bin/inetsix-jinja-render"],
     python_requires=">=2.7",
     install_requires=REQUIRED_PACKAGES,
     url="https://github.com/titom73/inetsix-config-builder",
