@@ -1,0 +1,15 @@
+---
+  customers:
+    dict:
+      cust01:
+        vlans:
+          - 10
+          - 11
+          - 12
+          - 13
+      cust02:
+        vlans:
+          - 20
+          - 21
+          - 22
+          - 23

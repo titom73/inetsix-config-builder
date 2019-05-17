@@ -1,0 +1,22 @@
+---
+language: python
+python:
+  - "2.7"
+# command to install dependencies
+jobs:
+  include:
+    - stage: code-quality
+      install:
+        - pip install flake8
+      # command to run tests
+      script:
+        - python -m flake8 --statistics --count --ignore E722,E501 bin/jinja-render.py 
+    - stage: installation
+      script: 
+        - pip install .
+        - inetsix-jinja-render -h
+    - stage: run
+      script: 
+        - pip install git+https://github.com/titom73/inetsix-config-builder
+        - inetsix-jinja-render -t tests/template.j2 -y tests/data.yaml
+        - cat generated-config.conf

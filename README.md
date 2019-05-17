@@ -7,10 +7,7 @@ Provide python script to massively generate configuration based on :
 
 ## Description
 
-Simple Script created to generate text document for many entries by using a template and YAML data modeling. It can be used for any kind of text file and it is not related to a specific vendor / language.
-
-For the moment, one of the use case is to generate configuration for many devices based on a `JINJA2` template.
-
+Scripts to gene
 ## Installation
 
 Scripts can be installed with pip:
@@ -22,17 +19,22 @@ $ pip install git+https://github.com/titom73/inetsix-config-builder
 ### Usage
 Usage is like below:
 
-    python configuration-builder.py -h
-    usage: configuration-builder.py [-h] [-v] [-y YAML] [-t TEMPLATE] [-o OUTPUT]
+```shell
+$ inetsix-jinja-render -h                                                                                                                                 tgrimonet@tgrimonet
+    usage: inetsix-jinja-render [-h] [-y YAML] [-t TEMPLATE] [-b BASE] [-o OUTPUT]
+                                [-of OUTPUT_FORMAT]
 
     Configuration Builder
 
     optional arguments:
-      -h, --help            show this help message and exit
-      -v, --verbose         Increase Verbosity
-      -y YAML, --yaml YAML  Provides YAML file to fill Jinja2 template,
+    -h, --help            show this help message and exit
+    -y YAML, --yaml YAML  Provides YAML file to fill Jinja2 template,
                             default=dict.yml
-      -t TEMPLATE, --template TEMPLATE
+    -t TEMPLATE, --template TEMPLATE
                             template file, default=./template.j2
-      -o OUTPUT, --output OUTPUT
-                            Base to construct filename, default=generated-conf-
+    -b BASE, --base BASE  Base to construct filename, default=generated-conf-
+    -o OUTPUT, --output OUTPUT
+                            Directory to store configuration, default .
+    -of OUTPUT_FORMAT, --output_format OUTPUT_FORMAT
+                            File extension, default: .conf
+```
