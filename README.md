@@ -1,13 +1,12 @@
+![GitHub](https://img.shields.io/github/license/titom73/inetsix-config-builder.svg) [![Build Status](https://travis-ci.org/titom73/inetsix-config-builder.svg?branch=master)](https://travis-ci.org/titom73/inetsix-config-builder)  ![GitHub repo size](https://img.shields.io/github/repo-size/titom73/inetsix-config-builder.svg)  ![GitHub top language](https://img.shields.io/github/languages/top/titom73/inetsix-config-builder.svg)  ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/titom73/inetsix-config-builder.svg)
+
 # Configuration Builder
 
-Provide python script to massively generate configuration based on :
-- Python
+Provide python script to render templates based on :
+- Python 2.7 & 3.x
 - Jinja2
 - Yaml
 
-## Description
-
-Scripts to gene
 ## Installation
 
 Scripts can be installed with pip:
