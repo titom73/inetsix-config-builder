@@ -28,6 +28,7 @@ if __name__ == '__main__':
     # Manage All options and construct array
     options = parser.parse_args()
 
+    print('Template rendering using Jinja and YAML')
     # Check if output directory is existing, else create it.
     if os.path.exists(options.output) is False:
         os.makedirs(options.output)
@@ -37,7 +38,6 @@ if __name__ == '__main__':
     print('* Template directory: ' + WORKING_DIR)
     print('* Template Filename: ' + TEMPLATE_FILE)
 
-    print('Template rendering using Jinja and YAML')
     # YAML file.
     with open(options.yaml, 'r') as stream:
         try:
