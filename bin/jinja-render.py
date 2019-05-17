@@ -37,7 +37,7 @@ if os.path.exists(options.output) is False:
 print('Template rendering using Jinja and YAML')
 # YAML file.
 with open(options.yaml) as fh:
-    data = yaml.load(fh.read())
+    data = yaml.load(fh.read(), Loader=yaml.SafeLoader)
 
 # Jinja2 template file.
 with open(options.template) as t_fh:
