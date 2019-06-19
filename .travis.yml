@@ -14,9 +14,9 @@ jobs:
     - stage: installation
       script: 
         - pip install .
-        - inetsix-jinja-render -h
+        - inetsix-template-render -h
     - stage: run
       script: 
         - pip install git+https://github.com/titom73/inetsix-config-builder
-        - inetsix-jinja-render -t tests/template.j2 -y tests/data.yaml
+        - inetsix-template-render -t tests/template.j2 -y tests/data.yaml
         - cat generated-config.conf
