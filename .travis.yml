@@ -14,11 +14,11 @@ jobs:
     - stage: test-installation
       script: 
         - pip install .
-        - inetsix-template-render -h
+        - inetsix-config-builder -h
     - stage: test-run
       script: 
         - pip install git+https://github.com/titom73/inetsix-config-builder
-        - inetsix-template-render -t tests/template.j2 -y tests/data.yaml
+        - inetsix-config-builder -t tests/template.j2 -y tests/data.yaml
         - cat generated-config.conf
     - stage: pypi-deploy
       name: Push package to pypi servers
