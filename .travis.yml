@@ -29,7 +29,7 @@ jobs:
         username: titom73
         skip_existing: true
         password:
-          secure: SiCZUeZOAyTjB9+lq8chh5lSA+/M2uma0vxj2j+uiuFVNbHIdwhPnWi1Hu71tGDUSO9j827HE7DhNHhjDqDpfA8rHOyHm/2KM9tiGjyTS65AB6mI2jQP/34m/6tYxM+zof56jU5Tn9zlNR2XqBqlhRwMMFrjcT+9B1CFCPE7/8/K7Sw48Vw0DltQzpQPQ34g2TbcTFydWJu4kJCONVHnY1x2jmddda6iJc6Lkg6enSHEDPccHdOXcaMjGc4+ST4uCPEi+1CzCVhItmviqBclVxZvYC8cKzslMaE2sohgsuPkhyVcZYqwCXyoDBFHZMo08A3DdSkksxbnewS2LSZ5HzWkBEiqGQwbJLnl6uy9gMqLlfVDHHIOloAi0OcakX1LmOJDlD+M4M39GvVDHZJL9MIxkt4RxTM+yuYb8GWxYAs8yqBk3Jr7zs55/eEAIHvKyTBm6NoDg01K6TT0mO6ecsA1yMWEDYqwHPBXQsj4S0oM1JgvvJ6u17LcTcLcjFBTu63eHgEy3tlTB0ds53vruNBTN4OVs5/IGmcI2YuJvMIXbON+KewvVMKTAn7fr5eQN5JZW77WbP3UgZheT+oFp1vrTDAuwyp0ShAmZrpj6RsLC0dWSdsHIy98gFlfx+Vj1Ox0fJcD8FscvGhJKwQ0TdKa1cBPSB6/NapHGG36Cxg=
+          secure: secure: "i2aIIEtvvCdgETr54UPYXkUI4Ebqjqc1b6z+sVBJPVpsmLCgwVXrwNGOc5xlDwMYiTmDyEX8t2Njo1VzBxiTSSosPJPl5eBf0Gow5Xk95zplmyLjg8shwIYO6JHlISKSSyu++nEwJm8rpH08L23Wmlk+q+vUnecIW0oF5vPYbEOgKlCeH5FqlwCLDTKE11i9aMqQRtXqlvMtSM9GA7OVpMkA3nE/knlYpZiloERAfvsSwVIBC7PaXdgnnOJe/dj0Q69K4s16/9kKR4LC2YrdediQmklqoVPtt4gBsD9I9IZD91YWvteWU0hHaAbBxn6mWdgxEniJRQ2uiu73+SfiYGOcEELHJ91UGAz0f3hxcPd3A90DY8f40YYnoInljlkP+YUsmuBbWhdCTvYkzto2wMmUl+0SK9VmEVEtCmlI7y3P5BRwGOFOQrV9yy8MpSyDzvtbHkFMhJw4+PSKc7rrQjPhIGwJ15a+sL37I3YaZKgUoPz9YC+qDLjDacKkQI4UWzFfBlM0um5XKK1dGmH9ucUeB1R4cM0+sw0PoxFeomqX16Zsk9Byx7yJcCCJHftiUNXd/sOXUWBmLqF19ZvzbNROqsOLE11RvDmKEqRDe7vslU5GHY7DTRAP/Sw1IcSVb4cAqNvDr480ql8IjXL6iloBXgG1yJruZfqN8XWqJEc="
         on:
           tags: true
           distributions: sdist bdist_wheel
