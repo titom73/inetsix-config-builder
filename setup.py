@@ -24,6 +24,7 @@ setup(
     author_email="tom@inetsix.net",
     description="Tool to render JINJA2 templates",
     long_description=LONG_DESCRIPTION,
+    long_description_content_type='text/markdown',
     zip_safe=False,
     classifiers=[
         "Development Status :: 4 - Beta",
