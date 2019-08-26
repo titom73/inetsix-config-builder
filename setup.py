@@ -10,11 +10,11 @@ with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()
 
 # Rename Scripts to sync with original name
-shutil.copyfile('bin/jinja-render.py', 'bin/inetsix-template-render')
+shutil.copyfile('bin/jinja-render.py', 'bin/inetsix-config-builder')
 
 setup(
-    name="inetsix-template-render",
-    version='0.2a',
+    name="inetsix-config-builder",
+    version='0.2',
     scripts=["bin/inetsix-template-render"],
     python_requires=">=2.7",
     install_requires=REQUIRED_PACKAGES,
@@ -31,5 +31,9 @@ setup(
         "Programming Language :: Python :: 2.7",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
+        'Environment :: Console',
+        'Intended Audience :: Information Technology',
+        'Intended Audience :: Telecommunications Industry',
+        'Natural Language :: English',
     ]
 )

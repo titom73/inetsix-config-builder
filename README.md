@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/titom73/inetsix-config-builder.svg) [![Build Status](https://travis-ci.org/titom73/inetsix-config-builder.svg?branch=master)](https://travis-ci.org/titom73/inetsix-config-builder)  ![GitHub repo size](https://img.shields.io/github/repo-size/titom73/inetsix-config-builder.svg)  ![GitHub top language](https://img.shields.io/github/languages/top/titom73/inetsix-config-builder.svg)  ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/titom73/inetsix-config-builder.svg)
+![PyPI](https://img.shields.io/pypi/v/inetsix-config-builder) ![GitHub](https://img.shields.io/github/license/titom73/inetsix-config-builder.svg) [![Build Status](https://travis-ci.org/titom73/inetsix-config-builder.svg?branch=master)](https://travis-ci.org/titom73/inetsix-config-builder)  ![GitHub repo size](https://img.shields.io/github/repo-size/titom73/inetsix-config-builder.svg)  ![GitHub top language](https://img.shields.io/github/languages/top/titom73/inetsix-config-builder.svg)  ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/titom73/inetsix-config-builder.svg)
 
 # Configuration Builder
 
@@ -12,6 +12,12 @@ Provide python script to render templates based on :
 Scripts can be installed with pip:
 
 ```shell
+$ pip install inetsix-config-builder
+```
+
+For latest version (dev)
+
+```shell
 $ pip install git+https://github.com/titom73/inetsix-config-builder
 ```
 
@@ -19,8 +25,8 @@ $ pip install git+https://github.com/titom73/inetsix-config-builder
 Usage is like below:
 
 ```shell
-$ inetsix-jinja-render -h                                                                                                                                 tgrimonet@tgrimonet
-    usage: inetsix-jinja-render [-h] [-y YAML] [-t TEMPLATE] [-b BASE] [-o OUTPUT]
+$ inetsix-config-builder -h                                                                                                                                 tgrimonet@tgrimonet
+    usage: inetsix-config-builder [-h] [-y YAML] [-t TEMPLATE] [-b BASE] [-o OUTPUT]
                                 [-of OUTPUT_FORMAT]
 
     Configuration Builder
