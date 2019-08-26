@@ -1,36 +1,33 @@
----
 language: python
 python:
-  - "2.7"
-# command to install dependencies
+- '2.7'
 jobs:
   include:
-    - stage: code-quality
-      install:
-        - pip install flake8
-      # command to run tests
-      script:
-        - python -m flake8 --statistics --count --ignore E722,E501 bin/jinja-render.py 
-    - stage: test-installation
-      script: 
-        - pip install .
-        - inetsix-config-builder -h
-    - stage: test-run
-      script: 
-        - pip install git+https://github.com/titom73/inetsix-config-builder
-        - inetsix-config-builder -t tests/template.j2 -y tests/data.yaml
-        - cat generated-config.conf
-    - stage: pypi-deploy
-      name: Push package to pypi servers
-      script:
-      - echo "deploy to pypi.org"
-      deploy:
-        provider: pypi
-        username: titom73
-        skip_existing: true
-        password:
-          secure: secure: "i2aIIEtvvCdgETr54UPYXkUI4Ebqjqc1b6z+sVBJPVpsmLCgwVXrwNGOc5xlDwMYiTmDyEX8t2Njo1VzBxiTSSosPJPl5eBf0Gow5Xk95zplmyLjg8shwIYO6JHlISKSSyu++nEwJm8rpH08L23Wmlk+q+vUnecIW0oF5vPYbEOgKlCeH5FqlwCLDTKE11i9aMqQRtXqlvMtSM9GA7OVpMkA3nE/knlYpZiloERAfvsSwVIBC7PaXdgnnOJe/dj0Q69K4s16/9kKR4LC2YrdediQmklqoVPtt4gBsD9I9IZD91YWvteWU0hHaAbBxn6mWdgxEniJRQ2uiu73+SfiYGOcEELHJ91UGAz0f3hxcPd3A90DY8f40YYnoInljlkP+YUsmuBbWhdCTvYkzto2wMmUl+0SK9VmEVEtCmlI7y3P5BRwGOFOQrV9yy8MpSyDzvtbHkFMhJw4+PSKc7rrQjPhIGwJ15a+sL37I3YaZKgUoPz9YC+qDLjDacKkQI4UWzFfBlM0um5XKK1dGmH9ucUeB1R4cM0+sw0PoxFeomqX16Zsk9Byx7yJcCCJHftiUNXd/sOXUWBmLqF19ZvzbNROqsOLE11RvDmKEqRDe7vslU5GHY7DTRAP/Sw1IcSVb4cAqNvDr480ql8IjXL6iloBXgG1yJruZfqN8XWqJEc="
-        on:
-          tags: true
-          distributions: sdist bdist_wheel
-          repo: titom73/inetsix-config-builder
+  - stage: code-quality
+    install:
+    - pip install flake8
+    script:
+    - python -m flake8 --statistics --count --ignore E722,E501 bin/jinja-render.py
+  - stage: test-installation
+    script:
+    - pip install .
+    - inetsix-config-builder -h
+  - stage: test-run
+    script:
+    - pip install git+https://github.com/titom73/inetsix-config-builder
+    - inetsix-config-builder -t tests/template.j2 -y tests/data.yaml
+    - cat generated-config.conf
+  - stage: pypi-deploy
+    name: Push package to pypi servers
+    script:
+    - echo "deploy to pypi.org"
+    deploy:
+      provider: pypi
+      username: titom73
+      skip_existing: true
+      password:
+        secure: Dp/Wh6lut/MNA75QaA8zYP5Bm0SwM0kvtljXI4sBYV4cX5lci12IzfcWKsAssR4JEbibDlrROQHdXJ6DpXUkzeeRagjTnJyuiRmwKT66OxrN+98RPq90yEOP5mdrxHuD+EJh2xnXhxAjrOevmppB5ysnF09ZWSWlqzl99tpe3ngJl5qcGM+smr0weRLV6Nd/OqyeepjeLNC6GUDfLHNlnP9HsyJk8tVPxItB2IgKL5O8WFPnSuc6nhesdwbmCdMZqvRC3Sq7mQy08CZe/YDn5Tku4GpoE1+DX7/TUTszYC4KBn5Wcx7neRT8SXZ95zbgfL298MnnSApRBVCM7mW8I5Ac5uQkF7ykRv/zvBEEpwmY+1h+FvXmZZga9dZJjZcRs3tFRs0ykzxQAIhZuzEL7CrL63azE++K1wERualdiJCs1dvSCIyf3F7BhBq9D1rubANC3W8prPXkP35kUdgeZWzqoRaTx6pZNn/J46959oAmUrw0Dg8TNtX7lHc7LGfkkTTtGm1VOUJx1bIp9FyYyr9EcAooU4n2m+kF3H94ttxX5v/ixc2G2qwYKnQlGfzTUNrjz8lU139p4zlQjJmlGwr0jOViZ3KLwiuKTROMqafo7fVh6ZgEqULeucuE4msOmaVvUa25BfkyGn7DEJb5XbIFQgtF5Wkvsfg2G8JN7iA=
+      on:
+        tags: true
+        distributions: sdist bdist_wheel
+        repo: titom73/inetsix-config-builder
