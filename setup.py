@@ -15,7 +15,7 @@ shutil.copyfile('bin/jinja-render.py', 'bin/inetsix-config-builder')
 setup(
     name="inetsix-config-builder",
     version='0.2',
-    scripts=["bin/inetsix-template-render"],
+    scripts=["bin/inetsix-config-builder"],
     python_requires=">=2.7",
     install_requires=REQUIRED_PACKAGES,
     url="https://github.com/titom73/inetsix-config-builder",
